@@ -1,0 +1,316 @@
+\documentclass[10pt]{article}
+\usepackage{geometry}
+\usepackage{hyperref}
+\hypersetup{
+    %colorlinks=true,
+    %linkcolor=blue
+}
+\usepackage{url}
+\usepackage{amssymb,amsmath,amsthm}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{enumerate}
+\usetikzlibrary{cd}
+\usepackage{nicematrix}
+%%%%%%%%
+%Theorem stuff
+%%%%%%%%
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{prop}[thm]{Proposition} 
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{question}[thm]{Question}
+\newtheorem{conj}[thm]{Conjecture}
+%Main theorems
+\newtheorem{mainthm}{Theorem}
+\renewcommand{\themainthm}{\Alph{mainthm}}
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{exercise}[thm]{Excercise}
+
+\theoremstyle{remark}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{conv}[thm]{Convention}
+\newtheorem{obs}[thm]{Observation}
+\newtheorem{exmp}[thm]{Example}
+\newtheorem{nexmp}[thm]{non-Example}
+
+
+
+
+\newcommand{\onto}{\twoheadrightarrow}
+\newcommand{\bbZ}{\mathbb{Z}}
+\newcommand{\bbQ}{\mathbb{Q}}
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\bbC}{\mathbb{C}}
+
+\title{A non linear supplement to Functional Analysis}
+
+\author{Nicholas Touikan}
+
+
+\begin{document}
+\maketitle
+
+\section{The contraction mapping theorem in Banach spaces and its applications}
+
+The material in this section is a simplification of \S 10.1 and \S 10.2 in \cite{Krantz}; at least a simplification in the sense that students in MATH 6043/4043 will have sufficient background to follow it. Although some of the results given here hold for general metric spaces, in this section we will always assume the metric comes from a norm in a Banach space.
+
+\subsection{The Contraction Mapping Theorem}
+Let $X$ be closed subset of a Banach space. A function $f:X\to X$ is a \emph{contraction map} if there exists $K<1$ such that for all $x,y \in X$\[
+  ||f(x)-f(y)|| \leq K||x-y||.
+\]
+
+\begin{thm}[Contraction Mapping Theorem]\label{thm:contraction}
+  Every contraction map $f:X\to X$ has a unique fixed point, i.e. there exists a unique $x_\star \in X$ such that $f(x_\star)=x_\star$. 
+\end{thm}
+\begin{proof}[sketch]
+  Uniqueness is easy. $x_\star$ is the limit of the sequence $\{f^n(x_0)\}$ for any $x_0 \in X$. This sequence is seen to be Cauchy by considering the geometric series $\sum_{n=0}^\infty AK^n$.
+\end{proof}
+
+
+\subsection{Newton's Method}
+If we take the curve $y=x^2$ then the tangent line through the point $(a,a^2)$ will have the equation $y = 2a(x-a)+a^2$. Suppose we want to compute $\sqrt 5$, the solution to $5=x^2$. Then we can take some initial guess $a$ and solve for $x$ in the tangent line equation $y=5$ to get\[
+  5 = 2a(x-a)+a^2 \Rightarrow x = \frac{1}{2}\left[\frac 5 a + a\right]=F(a).
+\] A sketch will show that if $a>\sqrt 5$ then $|F(a)-\sqrt 5|< |a\sqrt 5|$. Consider the derivative\[
+  F'(a) = \frac 1 2 \left[\frac{-5}{a^2}+1\right].
+\] On the one hand we have \[
+|F'(a)|<1 \Leftrightarrow |\frac{-5}{a^2}+1|< 2 
+\] which is true for $a \geq \sqrt 5$ and when $0<a < \sqrt 5$ then it is true when \[
+  -2 < \frac{-5}{a^2}+1 \Rightarrow a^2 \geq \frac 5 3.
+  \]
+
+  We have the following fact from calculus which is a variation of the racetrack principle
+  \begin{prop}
+    If $f$ is differentiable on an interval $I$ and for every $x \in I$ we have $|f'(x)|<M$ then for any $t_1,t_2 \in I$ we have $|f(t_1)-f(t_2)| < M|t_1-t_2|.$
+  \end{prop}
+
+  In particular in our example $|F'(a)| < \frac 1 2$ on the interval $[\sqrt 5,\infty)$, so $F$ is a contraction map with constant $K = \frac 1 2$ on the closed subset $[\sqrt 5,\infty)$ of the Banach space $\mathbb R$. We can verify that $F(\sqrt)=\sqrt 5$ so the contraction mapping Theorem  tells us that $\sqrt 5$ is the unique fixed point. A closer look at the proof tells us that for any $a \in [\sqrt 5,\infty)$ we have that $F^n(a) \to \sqrt 5$ as $n\to \infty$ and that this convergence is exponentially fast.
+
+  \subsection{The implicit function theorem}
+  Before continuing we need the following improved version of the contraction mapping theorem
+  
+\begin{cor}[Lipshitz implicit function theorem]\label{cor:lipschitz-fp}
+  Let $Y$ be a closed subset of a Banach space and $X$ some subset of any other Banach space. Let $F:X\times Y \to Y$ be a continuous function. Suppose there exists a uniform $0<K<1$ such that for all $x \in X$ and all $y_1,y_2\in Y$ we have \[
+    ||F(x,y_1) - F(x,y_2)||_Y \leq K ||y_1-y_2||_Y.
+  \] Then for each $x \in X$, the mapping $y \mapsto F(x,y)$ has a unique fixed point $\varphi(x)\in Y$, i.e. $F(x,\varphi(x))=\varphi(x)$. Furthermore the mapping $\varphi: X \to Y$ given by $x \to \varphi(x)$ is continuous. 
+\end{cor}
+
+Note we can put a metric on $X\times Y$ using\[
+  ||(x_1,y_1)-(x_2,y_2)||_{X\times Y} = ||x_1-x_2||_X+||y_1-y_2||_Y.
+  \]
+
+\begin{proof}
+  It's clear that if we fix $x$, then the contraction mapping gives $y_x$ such that $F(x,y_x)=y_x$ and so $\varphi(x)=y_x$ is a well-defined function. We now show that $\varphi$ is continuous. Given $x_0,x \in X$ we have
+  \begin{eqnarray*}
+    ||\varphi(x)-\varphi(x_0)||_Y
+                               & = &||F(x,\varphi(x))-F(x_0,\varphi(x_0))||_Y\\
+                               & \geq & ||F(x,\varphi(x)) - F(x,\varphi(x_0))||_Y+||F(x,\varphi(x_0))-F(x_0,\varphi(x_0))||_Y\\
+                               & \leq & K||\varphi(x)-\varphi(x_0)||_Y+ ||F(\varphi(x_0),x)-F(\varphi(x_0),x_0)||_Y.
+  \end{eqnarray*}
+  Isolating $||\varphi(x)-\varphi(x_0)||_Y$ gives
+  \[
+    ||\varphi(x)-\varphi(x_0)||_Y\leq \frac{1}{1-K}||F(\varphi(x_0),x)-F(\varphi(x_0),x_0)||_Y,
+  \]
+  Since $F$ is continuous the right hand side approaches 0 as $x\to x_0$, thus so does the left hand side. Since $x_0$ was arbitrary $\varphi$ is continuous.
+\end{proof}
+
+  
+  Consider the function $F:\bbR^2 \to \bbR$ given by $F(x,y) = x^2+y^2$. If we fix a value $c \in \bbR_{>0}$ then $F(x,y)=c$ gives rise to a curve. $F(x,y)=c$ is not the graph of a function but for any point $(x_0,y_0)$ in $F(x,y)=c$ besides $(\pm 1,0)$ we can find a $\varphi:(x_0-\epsilon,x_0+\epsilon) \to \bbR$ such that the points $(x,\varphi(x)), x \in (x_0-\epsilon,x_0+\epsilon)$  are the points in $F(x,y)=c$ close to $(x_0,y_0)$.
+
+Basically $\varphi$ ``solves'' for $y$ in terms of $x$ on $F(x,y=c$ near $(x_0,y_0))$. Note that we can always do this provided the tangent line to $F(x,y)=x$ at $(x_0,y_0)$ is not vertical, i.e. as long as\[
+\frac{\partial F}{\partial y}(x_0,y_0) \neq 0.
+\]
+We will give a generalization of this fact. It is not the full implicit function theorem, that is a cornerstone of differential geometry, but it will be general enough for our discussion of ODEs.
+
+\begin{thm}[Implicit Function Theorem (Cal 3 edition)]\label{thm:IFT}
+  Let $U \subset \bbR^n\times \bbR$ be an open set and let $u_0 = (\vec x_0,y_0)$. Let $F:U \to \bbR$ be contiuous, respect to a norm on $\bbR^n\times \bbR$, we write $F=F(\vec x,y)$ and assume that:
+\begin{enumerate}
+\item $\displaystyle \frac{\partial F}{\partial y}(\vec x,y) = F_y(\vec x,y)$ exists for every $u \in U$
+\item $F_y:U \to \bbR$ is continuous at $u_0$ and $F_y(\vec x_0,y_0) \neq 0$.
+\end{enumerate}
+Then there are radii $\alpha,\beta$ such that the product of balls\[
+  \overline{B_{x_0}(\alpha)}\times \overline{B_{y_0}(\beta)} \subset U
+  \] and there is a unique continuous function $\varphi:\overline{B_{x_0}(\alpha)} \to \overline{B_{y_0}(\beta)}$ such that for all $(\vec x,y) \in \overline{B_{x_0}(\alpha)}\times \overline{B_{y_0}(\beta)}$ we have\[
+        F(\vec x,y) = 0 \Leftrightarrow y = \varphi(\vec x).
+        \]
+\end{thm}
+\begin{proof}
+  We may assume without loss of generality that $x_0=\vec 0,y_0=0$. Let \[\Phi(\vec x,y) = y-\frac{1}{F_y(\vec 0,0)}F(\vec x,y)\] for $(\vec x,y)\in U$. $\Phi:U \to \bbR$ is continuous and we have\[
+    \frac{\partial}{\partial y} \Phi(\vec x,y)= \Phi_y(\vec x,y) = 1 -\frac{1}{F_y(\vec 0,0)}F_y(\vec x,y). 
+  \] It follows by continuity of $F_y$ that as $(\vec x,y) \to (\vec 0,0)$ we have $F_y(\vec x,y) \to F_y(\vec 0,0)$ and therefore $\Phi_y(\vec x,y) \to 0$. Thus for $\gamma>0$ small enough we have that on $\overline{B_{\vec 0}(\gamma)}\times\overline{B_{0}(\gamma)}$
+  \[
+    ||\Phi_y(\vec x,y)||<\frac 1 2.
+  \]
+  By the definition of partial derivatives and the mean value theorem we have \begin{equation}\label{eqn:contract}
+    ||\Phi(\vec x,y_1) - \Phi(\vec x,y_2)|| < \frac 1 2 ||y_1-y_2||
+  \end{equation} whenever $||\vec x||,||y_1||,||y_2|| <\beta<\gamma$. \emph{This looks like a contraction, but we still need to find an appropriate domain and range.}
+
+  By continuity of $\Phi$ we can find $0<\alpha<\beta$ such that $||\Phi(\vec x,0)|| \leq \frac \beta 2$, provided $||\vec x ||<\alpha$.  So taking $||\vec x||\leq \alpha$ and $||y||<\beta$. We have\[
+    ||\Phi(x,y)|| \leq ||\Phi(\vec x,0)||+ ||\Phi(\vec x,0)-\Phi(\vec x,y)|| \leq \frac{\beta}{2}+\frac{||y||}{2} \leq \beta.
+  \]
+
+  Thus the restriction map \[\Phi: \overline{B_{\vec 0}(\alpha)}\times \overline{B_0(\beta)} \to \overline{B_0(\beta)}\] is a contraction on $\overline{B_0(\beta)}$ that is uniform on $\overline{B_{\vec 0}(\alpha)}$ with constant $K=1/2$. By Corollary \ref{cor:lipschitz-fp} there exists $\varphi:\overline{B_{\vec 0}(\alpha)} \to \overline{B_0(\beta)}$ such that for  $\vec x \in \overline{B_{\vec 0}(\alpha)}$ we have $\Phi(\vec x,\varphi(\vec)) = \varphi(\vec x)$. Substituting this into the definition of $\Phi(\vec x,y)$ gives $F(\vec x,\varphi(\vec x))=0 \Leftrightarrow \Phi(\vec x,\varphi(\vec x))=\varphi(\vec x)$. The result now follows.
+\end{proof}
+
+The more general version of the Implicit Function Theorem is proven in \S10.2 of \cite{Krantz}
+
+\subsection{Existence and uniqueness of ODEs}
+Consider first the context of systems of first order ODEs. We have some state space $S\subset \mathbb R^n$ and we have a rule\begin{equation}\label{eq:ODE}
+  \frac{d}{dt}\vec x= \dot{\vec x} = f(t,\vec x)
+\end{equation} that describes the time evolution.
+
+For example consider the falling body in one dimension. Here $S = (0,\infty)\times\bbR$ and a state is given by the position, velocity pair $\vec x=[y,v]^T$ which we could also write $\vec x = [y,\dot y]^T$. Suppose the mass of the Earth is concentrated at $y=0$ and Isaac Newton is being attracted by the Earth's gravity (which is the only body in the universe), normalizing units and using Newton's law of gravitation we get\[
+\dot{\vec{x}} =
+\begin{bmatrix}
+  \dot y \\ \ddot y
+\end{bmatrix}
+ =
+ \begin{bmatrix}
+   \dot y \\ -\frac{1}{y^2}
+ \end{bmatrix}
+  \]
+  Using more ``generic'' notation, writing states as $[x_1,x_2]^T$, this becomes
+  \[
+    \dot{\vec x} =
+    \begin{bmatrix}
+      \dot x_1\\\dot x_2
+    \end{bmatrix}=
+    \begin{bmatrix}
+      x_2 \\ -\frac{1}{x_1^2}
+    \end{bmatrix}=
+    \begin{bmatrix}
+      f_1(t,x_1,x_2)\\f_2(t,x_1,x_2)
+    \end{bmatrix}= f(t,\vec x),   
+  \] so that $f$ is seen to be a vector-valued function.
+
+  Our goal is to find a function $\vec x: I \to S$, where $I$ is some interval that satisfies
+  \begin{equation}
+    \label{eq:Cauchy-prob}
+    \left\{
+      \begin{array}{lcl}
+        \dot{\vec{x}}(t) & = & f(t,\vec x(t))\\
+        \vec x(t_0) & = & \vec x_0
+      \end{array}
+    \right.
+  \end{equation}
+  In other words a solution $\vec x(t)$ is a function that shows how the state evolves throughout time subject to the evolution equation \ref{eq:ODE} given the \emph{initial state} $\vec x(t_0)= \vec x_0$.
+  
+  Going back to our example. Setting $\vec x_0 = (1000,0)$ means that Isaac Newton starts at a distance of 1000 units from the center of the Earth with no velocity. It's easy to see that after a finite time, Newton will eventually reach the center of the Earth (it's only 1000 units away), at which point by conservation of energy his velocity will be infinite. So the function $\vec x (t)$ that describes his position and velocity as a function of time will cease to be well-defined after a certain finite time. For this reason it is perfectly reasonable to for the domain of $\vec x(t)$ to sometimes be a proper sub-interval of $\bbR$.
+  
+  Now let's go back to the general $n$-dimensional case. If we look at $f(t,\vec x(t))$ in \eqref{eq:Cauchy-prob} and define:
+  \begin{equation}\label{eq:integral-def}
+    \int_{t_0}^tf(s,\vec x(s))ds =
+    \begin{bmatrix}
+      \int_{t_0}^tf_1(s,\vec x(s))ds\\
+      \vdots\\
+      \int_{t_0}^tf_n(s,\vec x(s))ds\\
+    \end{bmatrix},
+  \end{equation} which is just an array of integrals in one variables, then the system of equations \eqref{eq:Cauchy-prob} can be rewritten as a single integral equation
+  \begin{equation}
+    \label{eq:integral}
+    \vec x(t) = \int_{t_0}^tf(s,\vec x(s))ds + \vec x_0.
+\end{equation}
+We first note that this equation above, especially the addition part, makes sense because $\bbR^n$ is equipped with addition. Now if $I=[a,b] \subset R$ is closed interval and $\mathbb R^n$ is equipped with some norm, then the set $C_I(\mathbb R^n)$ equipped with the norm\[
+  ||\vec x(t)|| = \max_{t \in I} ||\vec x(t)||_{\mathbb R^n}
+\] will itself be a Banach Space. Consider now the mapping
+\begin{equation}\label{eqn:ODE-contraction}
+  \left.
+    \begin{array}{rcl}
+      F: C_I(\mathbb R^n) &\to& C_I(\mathbb R^n)\\
+      \vec x(t) &\mapsto &\int_{t_0}^tf(s,\vec x(s))ds + \vec x_0,
+    \end{array}
+  \right.
+\end{equation}
+
+That takes $\vec x(t) \in C_I(\mathbb R^n)$ and applies an interval transform. It is immediate that a fixed point of $F$ will be a solution to \eqref{eq:integral}. We will show that we can restrict the domain of $F$ to be a contraction mapping.
+
+\begin{thm}[Existence and Uniqueness of solutions of ODEs]\label{thm:ODE}
+  Consider \eqref{eq:Cauchy-prob}. Let $u_0 = (t_0,\vec x_0) \in \bbR \times \bbR^n$ be an initial condition and let $u_0 \in U\subset \bbR \times\bbR^n$ be an open subset. Suppose that
+  \begin{enumerate}
+  \item The restriction $f|_U: U \to \bbR^n$ is a continous function, and
+  \item\label{it:ODE-Lipshitz} there exists an upper bound $K>0$ such that for every $(t,\vec x_1),(t,\vec x_2) \in U$\[
+      ||f(t,\vec x_1) - f(t,\vec x_2)||_{\mathbb R^n} \leq K ||\vec x_1 - \vec x_2||_{\mathbb R^n}. 
+    \]
+  \end{enumerate}
+  Then there exists some $\tau_0>0$ such that for any $0 < \tau < \tau_0$ there is a unique solution $\vec x(t) \in C^1_{[t_0-\tau,t_0+\tau]}(\bbR^n)$ to the equation \eqref{eq:Cauchy-prob}.
+\end{thm}
+      
+In \cite[Theorem 10.6]{Krantz} item \ref{it:ODE-Lipshitz} is strengthened by replacing $K$ by some function $k(t)\in L^1(t_0-a,t_0+a)$ for some sufficiently small $a$. In particular this allows the Lipshitz constant $K$ to go to infinity under certain controlled circumstances. In the textbook the result is also more general in that $\bbR^n$ is replaced by an arbitrary Banach space.
+
+Still, as, Theorem \ref{thm:ODE} remains highly applicable and the proof, while simpler, remains practically identical to that of \cite[Theorem 10.6]{Krantz}, all the important ideas are there.
+
+\begin{lem}
+  Let $X$ be a closed subset of a Banach space. If the $n$-fold composition $f^n:X \to X$ is a contraction map, then $f$ itself admits a unique fixed point $x_*$.
+\end{lem}
+\begin{proof}
+  By Theorem \ref{thm:contraction} $f^n$ admits a unique fixed point $x_*$, which means $f^n(x_*)=x_*$. Now note\[
+    f^n(f(x_*)) = f(f^n(x_*)) = f(x_*), 
+    \] so $f(x_*)$ is another fixed point of $f^n$. By uniqueness of fixed points we must have $f(x_*)=x_*$.
+\end{proof}
+
+We now prove our main result.
+
+\begin{proof}[Poof of Theorem \ref{thm:ODE}.]
+  While any norm will do, it will be helpful to view $\bbR \times \bbR^{n}$ and $\bbR^n$ as spaces of column vectors and equip then with the $\ell^\infty$ norm.
+
+We first note that since $\bbR \times \bbR^n$ is finite dimensional, by the Heine-Borel Theorem, any closed ball of diameter is compact. Therefore. Given any radius $s>0$ such that $B_{u_0}(s)\subset U$, there is an upper bound $m>0$ such that\[ ||f(t,\vec x)||_{\bbR^n} \leq m \] for all $(t,\vec x) \in \overline{B_{u_0}(s)}$. Therefore, for the rest of the proof, fix some $s$ such that $\overline{B_{u_0}(s)} \subset U$ and an upper bound $m$
+
+
+  Let $\tau_0 = \min\{s,s/m\}$, let $0 <\tau < \tau_0$ be arbitrary and denote $I_\tau = [t_0-\tau,t_0+\tau]$. Let $\mathcal B = C_{I_\tau}(\bbR^n)$ be the Banach space of continuous functions from $I_\tau$ to $\bbR^n$ equipped with the standard uniform (or supremum) norm. Consider the closed ball \[
+    Z = \overline{B_{\vec x_0(t)}(s)} \subset  \mathcal B,
+  \] where $\vec x_0(t)$ is the constant function $t \mapsto \vec x_0$. By definition, for any $\vec z(t) \in Z$ and any $t \in I_\tau$ we have \[(t,\vec z(t)) \in B_{(t_0,\vec x_0)}(s) = B_{u_0}(s)\subset \bbR\times\bbR^{n},\]
+  by definition, $||f(t,\vec z(t))||_{\bbR^n}<m$ for all $t \in I_\tau$. Consider now the (perhaps non-linear) operator $F$ given in \eqref{eqn:ODE-contraction} we have:\[
+    \sup_{t \in I_\tau}||[F(z)](t) - \vec x_0(t)|| \leq \left|\left|\int_{t_0}^\tau f(s,\vec z(s))ds\right|\right|%\leq \left| \int_{t_0}^\tau ||f(s,\vec z(s))||ds \right|
+    \leq m\cdot \tau < s,
+  \] by our definition of $\tau$ our choice to use the $\ell^\infty$ norm, the definition \eqref{eq:integral-def} and the standard integral estimates from single variable calculus. It follows that $F:Z \to Z$. It remains to show that some power of $F:Z \to Z$ is a contraction mapping.
+
+  \emph{Claim:} For every $n \in \bbZ_{\geq 0}$, every $t \in I_{\tau}$, and for every $z_1(t),z_2(t) \in C_{I_\tau}(\bbR^n)$ we have\[
+    ||[F^n(z_1)](t) - [F^n(z_2)](t)||_{\bbR^n} \leq \frac{(K|t-t_0|)^n}{n!}||z_1-z_2||_{C_{I_\tau}(\bbR^n)}.
+  \]
+  We procede by induction on $n$. For the base case, $n=1$ we have for $t>t_0$
+  \begin{eqnarray*}
+    ||[F(z_1)](t) - [F(z_2)](t)||_{\bbR^n}
+    &=& \left|\left|\int_{t_0}^tf(s,z_1(s))-f(s,z_2(s))ds \right|\right|_{\bbR^n}\\
+    &\leq& \int_{t_0}^t K||z_1(s)-z_2(s)||_{\bbR^n} ds\\
+    &\leq& K(t-t_0) ||z_1-z_2||_{C_{I_\tau}(\bbR^n)}
+  \end{eqnarray*}
+ by assumption \ref{it:ODE-Lipshitz}, so the claim holds for $n=1$ when $t>t_0$. When $t<t_0$ the absolute value on the left hand side can be bouded above by taking the negative integrand. Suppose the claim is true for $n$, then we have, for $t> t_0$,
+\begin{eqnarray*}
+  ||[F^{n+1}(z_1)](t) - [F^{n+1}(z_2)](t)||_{\bbR^n}
+  & = & \left|\left|\int_{t_0}^tf(s,[F^n(z_1)](s))-f(s,[F(z_2)]^n(s))ds \right|\right|_{\bbR^n}\\
+  \textrm{(by I.H. and definition of $K$)}& \leq & \int_{t_0}^t K\left|\frac{(K(s-t_0))^n}{n!}||z_1-z_2||_{C_{I_\tau}(\bbR^n)}\right|ds\\
+  & = & ||z_1-z_2||_{C_{I_\tau}(\bbR^n)}\int_{t_0}^t K \frac{(K(s-t_0))^n}{n!}ds\\
+  & = & ||z_1-z_2||_{C_{I_\tau}(\bbR^n)}\left[\frac{K^{n+1}(t-t_0)^{n+1}}{(n+1)!}\right].  
+\end{eqnarray*}
+The case $t<t_0$ is handled similarly and the claim follows by induction.
+
+The claim now immediately implies that\[
+  ||F^n(z_1) - F^n(z_2)||_{{C_{I_\tau}(\bbR^n)}} \leq \frac {(K\tau)^n}{n!}||z_1-z_2||_{C_{I_\tau}(\bbR^n)}
+\] and since factorials grow faster than power functions, for a sufficiently large $N$ we will have $\frac {(K\tau)^n}{n!}<1$ for all $n>N$. It follows that that $F$ has a unique fixed point $\vec x(t)$ in $Z$, which must be the solution  of \eqref{eq:Cauchy-prob}
+\end{proof}
+
+It is worth noting that although Theorem \ref{thm:ODE} doesn't give us much insight into what solutions of systems of first order ODEs look like, it does give us a numerical method to find a solution: start with the constant function $\vec x_0$ and repeatedly apply the operator $F$. The theory says that this will produce a sequence of functions that eventually converge exponentially fast in the standard (uniform) norm of some $C_{I_\tau}(\bbR^n)$. This will work well if you manage to code it in a computer: a function $\vec z(t)$ will just be represented as an $n-tuple$ of sequences.
+\subsubsection{A single ODE in higher order}
+An \emph{single ordinary differential equation of order $k$} is an equation of the form:
+\begin{equation}
+  \label{eq:orderk-ode}
+  G(t,y(t),y'(t),\ldots,y^{(k)}(t))=0
+\end{equation}
+where $G:\mathbb R^{k+1} \to \mathbb R$ and where a solution $y(t)$ is some function $y:I \to \bbR$ where $I$ is some interval. An \emph{initial contition} is a specification of values $y^{(j)}(t_0)=c_j, j=1,\ldots,k$. Let's write $G = G(\xi_1,\ldots,\xi_k,\zeta)$ where the variable $\zeta$ is the variable that takes $y^{(k)}(t)$. Given an initial condition $(t_0,c_1,\ldots,c_{k-1},c_k)$ we can (very often) apply the Implicit Function Theorem  \ref{thm:IFT} to get \[G(t,\xi_1,\ldots,\xi_k,\zeta)=0 \Leftrightarrow \zeta = \varphi(t,\xi_1,\ldots,\xi_{k-1})\] for points $(t,\xi_1,\ldots,\xi_k,\zeta)$ close to $(t_0,c_1,\ldots,c_{k-1},c_k)$. We can then obtain the following system of first order equation\[
+  \dot{\vec\xi} (t) =
+  \begin{bmatrix}
+    \dot \xi_1(t) \\ \vdots \\\dot \xi_{k-2}(t) \\ \dot \xi_{k-1}(t)
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    \xi_2(t) \\ \vdots \\ \xi_{k-1}(t) \\ \varphi(t,\xi_1,\ldots,\xi_{k-1})
+  \end{bmatrix}
+  = f(t,\vec \xi(t))
+\] which is seen to be equivalent to \eqref{eq:orderk-ode} by noting that $\xi_j$ plays the role of the derivative $y^{(j-1)}$. Finding conditions for solutions to order $k$ ODEs will be left as an exercise.
+
+\bibliographystyle{alpha} \bibliography{nls}
+
+\end{document}
